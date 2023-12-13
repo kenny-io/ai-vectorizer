@@ -25,8 +25,8 @@ const Home = () => {
   const handleCopyToClipboard = () => {
     if (vectorizedText) {
       const tempTextArea = document.createElement('textarea');
-      tempTextArea.value = vectorizedText
-        .map((item) => item.embedding)
+      tempTextArea.value = (vectorizedText as any)
+        .map((item: any) => item.embedding)
         .flat()
         .join(', ');
       document.body.appendChild(tempTextArea);
@@ -67,7 +67,7 @@ const Home = () => {
                     <p>
                       Embeddings: [{' '}
                       {vectorizedText
-                        .flatMap((item) => item.embedding)
+                        .flatMap((item: any) => item.embedding)
                         .join(', ')}{' '}
                       ]
                     </p>
