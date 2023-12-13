@@ -4,7 +4,7 @@ import VectorizeText from '@/actions/embeddings';
 import Footer from '@/components/Footer';
 const Home = () => {
   const [inputText, setInputText] = useState('');
-  const [vectorizedText, setVectorizedText] = useState('');
+  const [vectorizedText, setVectorizedText] = useState([]);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const handleInputChange = (e: any) => {
@@ -60,21 +60,24 @@ const Home = () => {
         </form>
         <div className="md:w-1/2 p-4 ">
           <div className="md:h-70vh border border-gray-300 rounded p-2 overflow-y-auto h-64">
-            {vectorizedText ? (
+            {vectorizedText && Array.isArray(vectorizedText) ? (
               <div>
                 {vectorizedText.length > 0 ? (
-                  <>
+                  <div>
                     <p>
                       Embeddings: [{' '}
                       {vectorizedText
-                        .map((item) => item.embedding)
-                        .flat()
+                        .flatMap((item) => item.embedding)
                         .join(', ')}{' '}
                       ]
                     </p>
-                  </>
+                  </div>
                 ) : (
-                  <p>No embeddings available</p>
+                  <p className="text-gray-300">
+                    {isLoading
+                      ? 'Vectorizing text...'
+                      : 'Vector embeddings will appear here'}
+                  </p>
                 )}
               </div>
             ) : (
@@ -86,9 +89,9 @@ const Home = () => {
             )}
           </div>
           <button
-            disabled={!vectorizedText || isCopied || isLoading}
+            disabled={vectorizedText.length === 0 || isCopied || isLoading}
             className={`w-full md:w-auto ${
-              vectorizedText ? 'bg-green-700' : 'bg-gray-300'
+              vectorizedText.length > 0 ? 'bg-green-700' : 'bg-gray-500'
             } text-white px-4 py-2 rounded mt-3`}
             onClick={handleCopyToClipboard}
           >
